@@ -1,6 +1,11 @@
 module Collidable
-  def collide?
-    @collide
+  def collide? object = nil
+    return @collide if object.nil?
+
+    @collide &&
+      !(self.class == Person && object.class == Fireball) &&
+      !(self.class == Fireball && object.class == Person) &&
+      !(self.class == Fireball && object.class == Fireball)
   end
 
   def overlap? a, b
@@ -20,7 +25,7 @@ module Collidable
 
       (object.x..(object.x + object.width)).include?(to_check) &&
         overlap?(y...(y + height), object.y...(object.y + object.height)) &&
-        object.collide?
+        object.collide?(self)
     end.first
   end
 
@@ -31,7 +36,7 @@ module Collidable
       ((object.y - 5)..(object.y + object.height)).include?(y + height) &&
         overlap?(x..(x + width), (object.x)..(object.x + object.width)) &&
         !too_far_down?(object) &&
-        object.collide?
+        object.collide?(self)
     end.first
   end
 
@@ -42,7 +47,7 @@ module Collidable
       ((object.y)..(object.y + object.height)).include?(y) &&
         overlap?(x..(x + width), (object.x)..(object.x + object.width)) &&
         !too_far_up?(object) &&
-        object.collide?
+        object.collide?(self)
     end.first
   end
 
